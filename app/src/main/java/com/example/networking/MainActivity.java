@@ -6,8 +6,11 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -16,27 +19,50 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Mountain[] mountains;
-    ArrayAdapter<Mountain> adapter;
-
+    private ArrayList<Mountain> listOfMountains = new ArrayList<>();
+    private ListView listView;
+    private ArrayAdapter<Mountain> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        listView = findViewById(R.id.mainListview);
+
         new JsonTask().execute("https://wwwlab.iit.his.se/brom/kurser/mobilprog/dbservice/admin/getdataasjson.php?type=brom");
+
+        adapter = new ArrayAdapter<Mountain>(MainActivity.this, R.layout.list_item_textview,listOfMountains);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Mountain berg = listOfMountains.get(position);
+
+                berg.getName();
+                berg.getLocation();
+                berg.getHeight();
+
+                String send = "The mountian " + berg.getName() + " is located in " + berg.getLocation() + " and are " + berg.getHeight() + " meters height!";
+
+                Toast.makeText(MainActivity.this, send, Toast.LENGTH_LONG).show();
+
+                Log.d("OnClick ==>","Mountain: " + berg.getName());
+            }
+        });
     }
 
     @SuppressLint("StaticFieldLeak")
     private class JsonTask extends AsyncTask<String, String, String> {
-
 
         private HttpURLConnection connection = null;
         private BufferedReader reader = null;
@@ -79,10 +105,14 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String json) {
             Log.d("Async ==>", json);
             Gson gson = new Gson();
+            Mountain[] mountains;
             mountains = gson.fromJson(json,Mountain[].class);
+            listOfMountains.clear();
+
             for (int i = 0; i < mountains.length; i++) {
-                Log.d("Async ==>","Mountain: "+mountains[i].getName());
+                listOfMountains.add(mountains[i]);
             }
+            adapter.notifyDataSetChanged();
         }
     }
 }

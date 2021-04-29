@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = 0; i < mountains.length; i++) {
                 listOfMountains.add(mountains[i]);
+                Log.d("Async ==>", "Added: " + mountains[i]);
             }
             adapter.notifyDataSetChanged();
         }

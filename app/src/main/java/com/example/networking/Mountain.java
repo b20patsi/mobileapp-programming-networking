@@ -16,6 +16,11 @@ public class Mountain {
     private int feet;
     private Auxdata auxdata;
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public String getName() {
         return name;
     }

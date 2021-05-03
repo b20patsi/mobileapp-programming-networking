@@ -46,17 +46,17 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Mountain berg = listOfMountains.get(position);
+                Mountain toastMsg = listOfMountains.get(position);
 
-                berg.getName();
-                berg.getLocation();
-                berg.getHeight();
+                toastMsg.getName();
+                toastMsg.getLocation();
+                toastMsg.getHeight();
 
-                String send = "The mountian " + berg.getName() + " is located in " + berg.getLocation() + " and are " + berg.getHeight() + " meters height!";
+                String send = "The mountian " + toastMsg.getName() + " is located in " + toastMsg.getLocation() + " and have an height of " + toastMsg.getHeight() + " meters!";
 
                 Toast.makeText(MainActivity.this, send, Toast.LENGTH_LONG).show();
 
-                Log.d("OnClick ==>","Mountain: " + berg.getName());
+                Log.d("OnClick ==>","Mountain: " + toastMsg.getName());
             }
         });
     }
